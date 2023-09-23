@@ -8,7 +8,7 @@ interface Props {
 
 export const Home: FC<Props> = ({ data }) => {
   return (
-    <div className="bg-[#E7F4F2] flex items-center flex-col pt-12">
+    <div className="bg-[#E7F4F2] flex items-center flex-col pt-12 h-screen">
       <h1 className="text-6xl">Cassette Tapes</h1>
       <Table data={data} />
     </div>

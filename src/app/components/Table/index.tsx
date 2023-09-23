@@ -7,20 +7,17 @@ import {
   ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
-  getFacetedRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   FilterFn,
   ColumnDef,
   flexRender,
 } from "@tanstack/react-table";
 
 import { TapeProperties } from "@/types";
-import { DebouncedInput } from "./components";
-import { Pagination } from "./components/Pagination";
+import { DebouncedInput, Pagination, TableHeader } from "./components";
 import Image from "next/image";
 
-const filter: FilterFn<any> = (row, columnId, value, addMeta) => {
+const filter: FilterFn<any> = (row, columnId, value) => {
   return String(row.getValue(columnId))
     .toLowerCase()
     .includes(String(value).toLowerCase());
@@ -31,7 +28,6 @@ interface Props {
 }
 
 export const Table: React.FC<Props> = ({ data }) => {
-  console.log("data", data);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -40,8 +36,8 @@ export const Table: React.FC<Props> = ({ data }) => {
   const columns = React.useMemo<ColumnDef<TapeProperties, any>[]>(
     () => [
       {
-        accessorKey: "thumb",
         header: () => {},
+        accessorKey: "thumb",
         cell: ({ row }) => (
           <Image
             src={row.getValue("thumb")}
@@ -54,19 +50,19 @@ export const Table: React.FC<Props> = ({ data }) => {
       },
       {
         accessorKey: "brand",
-        header: () => <div className="w-32 flex h-10">Brand</div>,
+        header: () => <TableHeader>Brand</TableHeader>,
       },
       {
         accessorKey: "type",
-        header: () => <div className="w-32 flex h-10">Type</div>,
+        header: () => <TableHeader>Type</TableHeader>,
       },
       {
         accessorKey: "playingTime",
-        header: () => <div className="w-40 flex h-10">Playing time</div>,
+        header: () => <TableHeader>Playing time</TableHeader>,
       },
       {
         accessorKey: "color",
-        header: () => <div className="w-32 flex h-10">Color</div>,
+        header: () => <TableHeader>Color</TableHeader>,
       },
     ],
     []
@@ -87,10 +83,11 @@ export const Table: React.FC<Props> = ({ data }) => {
     globalFilterFn: filter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
   });
+
+  // Check if there are no rows after filtering
+  const isFilteredEmpty = table.getRowModel().rows.length === 0;
 
   return (
     <div className="p-10">
@@ -101,44 +98,57 @@ export const Table: React.FC<Props> = ({ data }) => {
           placeholder="Search for type, time, color or brand..."
         />
       </div>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    <div>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+      {isFilteredEmpty ? (
+        <div className="text-center py-20 text-4xl">
+          <p>No results!</p>
+          <button
+            onClick={() => setGlobalFilter("")}
+            type="button"
+            className="border-2 rounded-lg text-xl px-10 py-2 mt-8 border-black"
+          >
+            RESET
+          </button>
+        </div>
+      ) : (
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
                   return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
+                    <th key={header.id} colSpan={header.colSpan}>
+                      <div>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </div>
+                    </th>
                   );
                 })}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
       <Pagination table={table} />
     </div>
   );

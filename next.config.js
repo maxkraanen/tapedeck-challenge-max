@@ -3,9 +3,6 @@ const nextConfig = {
   images: {
     domains: ['www.tapedeck.org']
   },
-  env: {
-    API_KEY: process.env.API_KEY,
-  },
 }
 
 
