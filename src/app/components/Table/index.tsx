@@ -8,8 +8,6 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
   getPaginationRowModel,
   getSortedRowModel,
   FilterFn,
@@ -17,31 +15,15 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 
-import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import { TapeProperties } from "@/types";
 import { DebouncedInput } from "./components";
 import { Pagination } from "./components/Pagination";
+import Image from "next/image";
 
-declare module "@tanstack/table-core" {
-  interface FilterFns {
-    fuzzy: FilterFn<unknown>;
-  }
-  interface FilterMeta {
-    itemRank: RankingInfo;
-  }
-}
-
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value);
-
-  // Store the itemRank info
-  addMeta({
-    itemRank,
-  });
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed;
+const filter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  return String(row.getValue(columnId))
+    .toLowerCase()
+    .includes(String(value).toLowerCase());
 };
 
 interface Props {
@@ -58,34 +40,33 @@ export const Table: React.FC<Props> = ({ data }) => {
   const columns = React.useMemo<ColumnDef<TapeProperties, any>[]>(
     () => [
       {
-        header: "Tapes",
-        columns: [
-          {
-            accessorKey: "thumb",
-            header: () => <span>Image</span>,
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: "playingTime",
-            header: () => <span>playingTime</span>,
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: "type",
-            header: () => <span>type</span>,
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: "color",
-            header: "color",
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: "brand",
-            header: "Brand",
-            footer: (props) => props.column.id,
-          },
-        ],
+        accessorKey: "thumb",
+        header: () => {},
+        cell: ({ row }) => (
+          <Image
+            src={row.getValue("thumb")}
+            alt={`${row.getValue("playingTime")} ${row.getValue("brand")}`}
+            width={100}
+            height={64}
+            className="mr-8 mb-4"
+          />
+        ),
+      },
+      {
+        accessorKey: "brand",
+        header: () => <div className="w-32 flex h-10">Brand</div>,
+      },
+      {
+        accessorKey: "type",
+        header: () => <div className="w-32 flex h-10">Type</div>,
+      },
+      {
+        accessorKey: "playingTime",
+        header: () => <div className="w-40 flex h-10">Playing time</div>,
+      },
+      {
+        accessorKey: "color",
+        header: () => <div className="w-32 flex h-10">Color</div>,
       },
     ],
     []
@@ -95,7 +76,7 @@ export const Table: React.FC<Props> = ({ data }) => {
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter,
+      simple: filter,
     },
     state: {
       columnFilters,
@@ -103,30 +84,23 @@ export const Table: React.FC<Props> = ({ data }) => {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
+    globalFilterFn: filter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
   });
 
   return (
-    <div className="p-2">
-      <div>
+    <div className="p-10">
+      <div className="flex justify-center pb-14">
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value) => setGlobalFilter(String(value))}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
+          placeholder="Search for type, time, color or brand..."
         />
       </div>
-      <div className="h-2" />
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -134,16 +108,12 @@ export const Table: React.FC<Props> = ({ data }) => {
               {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <>
-                        <div>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </div>
-                      </>
-                    )}
+                    <div>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </div>
                   </th>
                 );
               })}
@@ -169,9 +139,7 @@ export const Table: React.FC<Props> = ({ data }) => {
           })}
         </tbody>
       </table>
-      <div className="h-2" />
       <Pagination table={table} />
-      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
     </div>
   );
 };

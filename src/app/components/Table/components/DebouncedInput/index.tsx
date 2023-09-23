@@ -33,6 +33,7 @@ export const DebouncedInput: React.FC<Props> = ({
   return (
     <input
       {...props}
+      className="w-[400px] h-14 rounded-lg pl-4"
       value={internalValue}
       onChange={(e) => setInternalValue(e.target.value)}
     />
