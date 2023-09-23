@@ -1,40 +1,32 @@
 import { FC } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { FlattenedTapes } from "@/types";
+import { TapeProperties } from "@/types";
+import { Table } from "@/components";
 
 interface Props {
-  data: FlattenedTapes;
+  data?: TapeProperties[];
 }
 
 export const Home: FC<Props> = ({ data }) => {
   return (
-    <div>
-      {Object.values(data).map((tape, index) => (
-        <div
-          key={index}
-          style={{
-            marginBottom: "20px",
-            border: "1px solid #e0e0e0",
-            padding: "15px",
-          }}
-        >
-          <Link href={tape.page || "#"}>
-            {tape.thumb && (
-              <Image
-                src={tape.thumb}
-                alt={tape.brand || "Tape"}
-                width={150} // you can adjust these as per your needs
-                height={150}
-              />
-            )}
+    <div className="bg-[#E7F4F2] flex items-center flex-col pt-12 min-h-screen h-full">
+      <h1 className="text-6xl">Cassette Tapes</h1>
+      {data ? (
+        <Table data={data} />
+      ) : (
+        <div className="text-center py-20 text-4xl">
+          <p>
+            Something went wrong when we were getting all casettes, please try
+            again
+          </p>
+          <Link
+            href="/"
+            className="border-2 rounded-lg text-xl px-10 py-2 mt-8 border-black pt-8"
+          >
+            HOME
           </Link>
-          <div>Color: {tape.color}</div>
-          <div>Brand: {tape.brand}</div>
-          <div>Type: {tape.type}</div>
-          <div>Playing Time: {tape.playingTime}</div>
         </div>
-      ))}
+      )}
     </div>
   );
 };
