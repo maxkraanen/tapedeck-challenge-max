@@ -1,28 +1,9 @@
-import { Tape, TapeProperties } from "../types";
-import { Home } from "../views";
-
-async function getData(): Promise<Tape[]> {
-  const API_KEY = process.env.API_KEY;
-
-  if (!API_KEY) {
-    throw new Error("Please make sure you supply a valid API key");
-  }
-
-  const res = await fetch("https://tapedeck-api-fresk.vercel.app/api", {
-    headers: {
-      "x-api-key": API_KEY,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
+import { fetchData } from "@/utils";
+import { Tape, TapeProperties } from "@/types";
+import { Home } from "@/views";
 
 export default async function Page() {
-  const data = await getData();
+  const data = await fetchData();
 
   const flattenTapeInfo = (tape: Tape[string]): TapeProperties => {
     return tape.reduce(
@@ -31,7 +12,7 @@ export default async function Page() {
     ) as TapeProperties;
   };
 
-  const flattenedData: TapeProperties[] = data.map((entry) => {
+  const flattenedData: TapeProperties[] | undefined = data?.map((entry) => {
     const key = Object.keys(entry)[0];
     return flattenTapeInfo(entry[key]);
   });

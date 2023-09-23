@@ -98,6 +98,7 @@ export const Table: React.FC<Props> = ({ data }) => {
           placeholder="Search for type, time, color or brand..."
         />
       </div>
+      {/* If there are no filter results we show the empty state */}
       {isFilteredEmpty ? (
         <div className="text-center py-20 text-4xl">
           <p>No results!</p>
