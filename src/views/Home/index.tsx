@@ -1,16 +1,17 @@
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FlattenedTapes } from "@/types";
+import { TapeProperties } from "@/types";
+import { Table } from "@/app/components";
 
 interface Props {
-  data: FlattenedTapes;
+  data: TapeProperties[];
 }
 
 export const Home: FC<Props> = ({ data }) => {
   return (
     <div>
-      {Object.values(data).map((tape, index) => (
+      {/* {Object.values(data).map((tape, index) => (
         <div
           key={index}
           style={{
@@ -34,7 +35,8 @@ export const Home: FC<Props> = ({ data }) => {
           <div>Type: {tape.type}</div>
           <div>Playing Time: {tape.playingTime}</div>
         </div>
-      ))}
+      ))} */}
+      <Table data={data} />
     </div>
   );
 };

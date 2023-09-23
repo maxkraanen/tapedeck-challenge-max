@@ -20,12 +20,6 @@ export type TapeProperties = {
   brand: string;
 };
 
-// Type for each entry in the data array
 export type TapeEntry = {
   [key: string]: TapeProperties[];
-};
-
-// Type for the final flattened structure
-export type FlattenedTapes = {
-  [key: string]: TapeProperties;
 };

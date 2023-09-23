@@ -1,5 +1,5 @@
-import { FlattenedTapes, Tape, TapeProperties } from "@/types";
-import { Home } from "@/views";
+import { Tape, TapeProperties } from "../types";
+import { Home } from "../views";
 
 async function getData(): Promise<Tape[]> {
   const API_KEY = process.env.API_KEY;
@@ -31,11 +31,10 @@ export default async function Page() {
     ) as TapeProperties;
   };
 
-  const flattenedData: FlattenedTapes = data.reduce((acc, entry) => {
+  const flattenedData: TapeProperties[] = data.map((entry) => {
     const key = Object.keys(entry)[0];
-    acc[key] = flattenTapeInfo(entry[key]);
-    return acc;
-  }, {} as FlattenedTapes);
+    return flattenTapeInfo(entry[key]);
+  });
 
   return <Home data={flattenedData} />;
 }
