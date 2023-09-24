@@ -86,12 +86,13 @@ export const Table: React.FC<Props> = ({ data }) => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  // Check if there are no rows after filtering
+  // Check if there are no results after filtering
   const isFilteredEmpty = table.getRowModel().rows.length === 0;
 
   return (
     <div className="p-10">
       <div className="flex justify-center pb-14">
+        {/* Used for filtering in all properties of tape */}
         <DebouncedInput
           value={globalFilter ?? ""}
           onChange={(value) => setGlobalFilter(String(value))}
