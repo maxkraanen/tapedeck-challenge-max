@@ -44,7 +44,7 @@ export const Table: React.FC<Props> = ({ data }) => {
             alt={`${row.getValue("playingTime")} ${row.getValue("brand")}`}
             width={100}
             height={64}
-            className="mr-8 mb-4"
+            className="mb-4 mr-8"
           />
         ),
       },
@@ -100,12 +100,12 @@ export const Table: React.FC<Props> = ({ data }) => {
       </div>
       {/* If there are no filter results we show the empty state */}
       {isFilteredEmpty ? (
-        <div className="text-center py-20 text-4xl">
+        <div className="py-20 text-4xl text-center">
           <p>No results!</p>
           <button
             onClick={() => setGlobalFilter("")}
             type="button"
-            className="border-2 rounded-lg text-xl px-10 py-2 mt-8 border-black"
+            className="px-10 py-2 mt-8 text-xl border-2 border-black rounded-lg"
           >
             RESET
           </button>
@@ -133,7 +133,7 @@ export const Table: React.FC<Props> = ({ data }) => {
           <tbody>
             {table.getRowModel().rows.map((row) => {
               return (
-                <tr key={row.id}>
+                <tr key={row.id} data-testid="tableRow">
                   {row.getVisibleCells().map((cell) => {
                     return (
                       <td key={cell.id}>

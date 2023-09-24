@@ -84,4 +84,30 @@ export const tapes = [
     type: "Chrome",
     brand: "JVC",
   },
+  {
+    page: "http://www.tapedeck.org/400/goldstar_popconcert_60_081022.php",
+    img: "http://www.tapedeck.org/400/goldstar_popconcert_60_081022.jpg",
+    thumb:
+      "http://www.tapedeck.org/400/goldstar_popconcert_60_081022-thumb.jpg",
+    playingTime: "060 minutes",
+    type: "Ferro",
+    color: "Grey",
+    brand: "Goldstar",
+  },
+  {
+    page: "http://www.tapedeck.org/400/Svema.php",
+    img: "http://www.tapedeck.org/400/Svema.jpg",
+    thumb: "http://www.tapedeck.org/400/Svema-thumb.jpg",
+    playingTime: "060 minutes",
+    type: "Ferro",
+    brand: "other",
+  },
+  {
+    page: "http://www.tapedeck.org/400/jvc_afii-90_071126.php",
+    img: "http://www.tapedeck.org/400/jvc_afii-90_071126.jpg",
+    thumb: "http://www.tapedeck.org/400/jvc_afii-90_071126-thumb.jpg",
+    playingTime: "090 minutes",
+    type: "Chrome",
+    brand: "JVC",
+  },
 ];

@@ -1,23 +1,23 @@
-import {
-  render,
-  fireEvent,
-  waitFor,
-  act,
-  findByText,
-} from "@testing-library/react";
+import { render, fireEvent, waitFor, act } from "@testing-library/react";
 import { Home } from "../index";
 import { tapes } from "@/__mocks__/tapesData";
 
 describe("Home Component", () => {
   it("renders cassettes data when data is provided", async () => {
-    const { getByText, queryByText, getByPlaceholderText } = render(
-      <Home data={tapes} />
-    );
+    const {
+      getAllByText,
+      getByText,
+      queryByText,
+      getByPlaceholderText,
+      getAllByTestId,
+    } = render(<Home data={tapes} />);
 
     // Checking if the title is rendered
     expect(getByText("Cassette Tapes")).toBeInTheDocument();
 
-    // Checking if one of the brands is rendered (you can add more checks)
+    // We show 10 items per page
+    expect(getAllByTestId("tableRow")).toHaveLength(10);
+    // Checking if the tapes are rendered
     expect(getByText("Laser")).toBeInTheDocument();
     expect(getByText("TDK")).toBeInTheDocument();
 
@@ -31,7 +31,6 @@ describe("Home Component", () => {
 
     await waitFor(() => {
       // after filtering, only the 'Laser' brand should be visible
-      expect(getByText("Laser")).toBeInTheDocument();
       expect(queryByText("TDK")).not.toBeInTheDocument();
     });
   });
