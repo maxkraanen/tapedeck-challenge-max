@@ -14,14 +14,15 @@ export const Home: FC<Props> = ({ data }) => {
       {data ? (
         <Table data={data} />
       ) : (
-        <div className="text-center py-20 text-4xl">
+        // If something went wrong with fetching the data we show the error state.
+        <div className="py-20 text-4xl text-center">
           <p>
             Something went wrong when we were getting all casettes, please try
             again
           </p>
           <Link
             href="/"
-            className="border-2 rounded-lg text-xl px-10 py-2 mt-8 border-black pt-8"
+            className="px-10 py-2 pt-8 mt-8 text-xl border-2 border-black rounded-lg"
           >
             HOME
           </Link>
