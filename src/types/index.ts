@@ -11,15 +11,15 @@ export type TapeProperties = {
 };
 
 export type Tape = {
-  [key: string]: [
-    { page: string },
-    { img: string },
-    { thumb: string },
-    { playingTime: string },
-    { type: string },
-    { color: string },
-    { brand: string }
-  ];
+  [key: string]: Array<
+    | { page?: string }
+    | { img?: string }
+    | { thumb?: string }
+    | { playingTime?: string }
+    | { type?: string }
+    | { color?: string }
+    | { brand?: string }
+  >;
 };
 
 export type TapeEntry = {

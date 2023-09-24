@@ -27,8 +27,6 @@ export const fetchData = async (): Promise<Tape[] | undefined> => {
       if (attempts === MAX_RETRIES) {
         throw new Error("Failed to fetch data after multiple attempts");
       }
-
-      return undefined;
     }
   }
 };
